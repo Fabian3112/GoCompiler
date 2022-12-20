@@ -50,8 +50,8 @@ type Decl struct {
 }
 type IfThenElse struct {
 	cond     Exp
-	thenStmt Stmt
-	elseStmt Stmt
+	thenStmt Block
+	elseStmt Block
 }
 
 type Assign struct {
@@ -130,6 +130,58 @@ func and(x, y Exp) Exp {
 func or(x, y Exp) Exp {
 	return (Or)([2]Exp{x, y})
 }
+
+/*--------------- Own Code --------------------*/
+//helper functions
+func seq(stmt_1, stmt_2 Stmt) Stmt {
+	return (Seq)([2]Stmt{stmt_1, stmt_2})
+}
+
+func decl(lhs string, rhs Exp) Stmt {
+	return Decl{lhs, rhs}
+}
+
+func ifThenElse(cond Exp, thenStmt, elseStmt Block) Stmt {
+	return IfThenElse{cond, thenStmt, elseStmt}
+}
+
+func assign(lhs string, rhs Exp) Stmt {
+	return Assign{lhs, rhs}
+}
+
+func whileStmt(cond Exp, block Block) Stmt {
+	return WhileStmt{cond, block}
+}
+
+func block(stmt Stmt) Block {
+	return Block{stmt}
+}
+
+func printStmt(exp Exp) Stmt {
+	return PrintStmt{exp}
+}
+
+func not(exp Exp) Exp {
+	return Not{exp}
+}
+
+func equal(x, y Exp) Exp {
+	return Equal{x, y}
+}
+
+func lesser(x, y Exp) Exp {
+	return Lesser{x, y}
+}
+
+func group(exp Exp) Exp {
+	return Group{exp}
+}
+
+func variable(s string) Exp {
+	return Var(s)
+}
+
+/*--------------------------------------------------*/
 
 func main() {
 	test()
