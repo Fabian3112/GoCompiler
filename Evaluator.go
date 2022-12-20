@@ -42,7 +42,7 @@ func showVal(v Val) string {
 }
 
 // Value State is a mapping from variable names to values
-type ValState map[string]Val
+type ValState map[string]*Val
 
 /////////////////////////
 // Stmt instances
@@ -73,7 +73,7 @@ func (ite IfThenElse) eval(s ValState) {
 func (decl Decl) eval(s ValState) {
 	v := decl.rhs.eval(s)
 	x := (string)(decl.lhs)
-	s[x] = v
+	s[x] = &v
 }
 
 /////////////////////////
@@ -142,7 +142,8 @@ func (a Assign) eval(s ValState) {
 		fmt.Printf("Variable assignement Failed. Var: " + x)
 	}
 
-	s[x] = v
+	oldValue.valB = v.valB
+	oldValue.valI = v.valI
 }
 
 func (w WhileStmt) eval(s ValState) {
@@ -152,7 +153,13 @@ func (w WhileStmt) eval(s ValState) {
 }
 
 func (b Block) eval(s ValState) {
-	b.stmt.eval(s)
+	s_new := make(map[string]*Val)
+
+	for key, element := range s {
+		s_new[key] = element
+	}
+
+	b.stmt.eval(s_new)
 }
 
 func (p PrintStmt) eval(s ValState) {
@@ -204,7 +211,7 @@ func (e Group) eval(s ValState) Val {
 func (v Var) eval(s ValState) Val {
 	val, ok := s[string(v)]
 	if ok {
-		return val
+		return *val
 	} else {
 		return mkUndefined()
 	}

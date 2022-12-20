@@ -23,8 +23,8 @@ func showType(t Type) string {
 	return s
 }
 
-// Value State is a mapping from variable names to types
-type TyState map[string]Type
+// Type State is a mapping from variable names to types
+type TyState map[string]*Type
 
 /////////////////////////
 // Stmt instances
@@ -43,13 +43,13 @@ func (decl Decl) check(t TyState) bool {
 	}
 
 	x := (string)(decl.lhs)
-	t[x] = ty
+	t[x] = &ty
 	return true
 }
 
 func (a Assign) check(t TyState) bool {
 	x := (string)(a.lhs)
-	return t[x] == a.rhs.infer(t)
+	return *t[x] == a.rhs.infer(t)
 }
 
 /////////////////////////
@@ -59,7 +59,7 @@ func (x Var) infer(t TyState) Type {
 	y := (string)(x)
 	ty, ok := t[y]
 	if ok {
-		return ty
+		return *ty
 	} else {
 		return TyIllTyped // variable does not exist yields illtyped
 	}
