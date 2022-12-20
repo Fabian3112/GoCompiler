@@ -59,6 +59,23 @@ type Assign struct {
 	rhs Exp
 }
 
+//-------------- Own Code --------//
+
+type WhileStmt struct {
+	cond  Exp
+	block Block
+}
+
+type Block struct {
+	stmt Stmt
+}
+
+type PrintStmt struct {
+	exp Exp
+}
+
+//--------------------------------//
+
 // Expression cases (incomplete)
 
 type Bool bool
@@ -68,6 +85,19 @@ type Plus [2]Exp
 type And [2]Exp
 type Or [2]Exp
 type Var string
+
+// -------------- Own Code ----------//
+type Not struct {
+	exp Exp
+}
+
+type Equal [2]Exp
+type Lesser [2]Exp
+type Group struct {
+	exp Exp
+}
+
+//----------------------------------//
 
 // Helper functions to build ASTs by hand
 
