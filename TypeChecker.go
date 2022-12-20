@@ -109,3 +109,61 @@ func (e Or) infer(t TyState) Type {
 	}
 	return TyIllTyped
 }
+
+//------------------- Own Code -------------
+func (i IfThenElse) check(t TyState) bool {
+	if i.cond.infer(t) != TyBool {
+		return false
+	} else if !i.thenStmt.check(t) {
+		return false
+	} else {
+		return i.elseStmt.check(t)
+	}
+}
+
+func (w WhileStmt) check(t TyState) bool {
+	if w.cond.infer(t) != TyBool {
+		return false
+	}
+	return w.block.check(t)
+}
+
+func (b Block) check(t TyState) bool {
+	return b.stmt.check(t)
+}
+
+func (p PrintStmt) check(t TyState) bool {
+	return p.exp.infer(t) != TyIllTyped
+}
+
+func (n Not) infer(t TyState) Type {
+	if n.exp.infer(t) == TyBool {
+		return TyBool
+	} else {
+		return TyIllTyped
+	}
+}
+
+func (e Equal) infer(t TyState) Type {
+	tya := e[0].infer(t)
+	tyb := e[1].infer(t)
+	if tya == tyb && tya != TyIllTyped {
+		return TyBool
+	} else {
+		return TyIllTyped
+	}
+}
+
+func (l Lesser) infer(t TyState) Type {
+	if l[0].infer(t) != TyInt {
+		return TyIllTyped
+	} else if l[1].infer(t) != TyInt {
+		return TyIllTyped
+	} else {
+		return TyBool
+	}
+}
+
+func (g Group) infer(t TyState) Type {
+	return g.exp.infer(t)
+}

@@ -128,3 +128,85 @@ func (e Or) eval(s ValState) Val {
 	}
 	return mkUndefined()
 }
+
+/*----------------- Own Code -----------------------*/
+
+func (a Assign) eval(s ValState) {
+	v := a.rhs.eval(s)
+	x := (string)(a.lhs)
+	oldValue, ok := s[x]
+	if !ok {
+		fmt.Printf("Variable unknown. Var: " + x)
+	}
+	if v.flag != oldValue.flag {
+		fmt.Printf("Variable assignement Failed. Var: " + x)
+	}
+
+	s[x] = v
+}
+
+func (w WhileStmt) eval(s ValState) {
+	for w.cond.eval(s).valB {
+		w.block.eval(s)
+	}
+}
+
+func (b Block) eval(s ValState) {
+	b.stmt.eval(s)
+}
+
+func (p PrintStmt) eval(s ValState) {
+	val := p.exp.eval(s)
+	if val.flag == ValueBool {
+		fmt.Printf("%t \n", val.valB)
+	} else if val.flag == ValueInt {
+		fmt.Printf("%d \n", val.valI)
+	} else {
+		fmt.Printf("Error Evaluating Print Statement Illtyped Value")
+	}
+
+}
+
+func (e Not) eval(s ValState) Val {
+	val := e.exp.eval(s)
+	if val.flag == ValueBool {
+		return mkBool(!val.valB)
+	} else {
+		return mkUndefined()
+	}
+}
+
+func (e Equal) eval(s ValState) Val {
+	b1 := e[0].eval(s)
+	b2 := e[1].eval(s)
+	switch {
+	case b1.flag == ValueBool && b2.flag == ValueBool:
+		return mkBool(b1.valB == b2.valB)
+	case b1.flag == ValueInt && b2.flag == ValueInt:
+		return mkBool(b1.valI == b2.valI)
+	}
+	return mkUndefined()
+}
+
+func (e Lesser) eval(s ValState) Val {
+	b1 := e[0].eval(s)
+	b2 := e[1].eval(s)
+	if b1.flag == ValueInt && b2.flag == ValueInt {
+		return mkBool(b1.valI < b2.valI)
+	}
+	return mkUndefined()
+}
+
+func (e Group) eval(s ValState) Val {
+	return e.exp.eval(s)
+}
+
+func (v Var) eval(s ValState) Val {
+	val, ok := s[string(v)]
+	if ok {
+		return val
+	} else {
+		return mkUndefined()
+	}
+
+}
