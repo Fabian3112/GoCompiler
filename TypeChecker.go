@@ -129,7 +129,12 @@ func (w WhileStmt) check(t TyState) bool {
 }
 
 func (b Block) check(t TyState) bool {
-	return b.stmt.check(t)
+	t_new := make(map[string]*Type)
+
+	for key, element := range t {
+		t_new[key] = element
+	}
+	return b.stmt.check(t_new)
 }
 
 func (p PrintStmt) check(t TyState) bool {

@@ -184,5 +184,40 @@ func variable(s string) Exp {
 /*--------------------------------------------------*/
 
 func main() {
-	test()
+	//test()
+
+	prog := "i := 0 ; while i < 10 { i = i + 1; print( i ) } ; print(i)"
+	tokens := tokenize(prog)
+	rpn := convertToReversePolishNotation(tokens)
+	myPrint(rpn)
+	ast := rpnToAst(rpn)
+	runStmt(ast)
+
+	prog = "{ i := false; x := 3; y := 1; if i { i = true } else { i := 3; x := 0; y = 2; print( i ); print( x ) }; print( i ); print( x ); print( y ) } "
+	//prog = "i := false; if i { print(1)} else{print(2)}"
+	ast = parseProgramm(prog)
+	runStmt(ast)
+	prog = ast.pretty()
+	ast = parseProgramm(prog)
+	runStmt(ast)
+
+	/*
+
+
+		prog = "{ i := 0 while i < 10 { i = i + 1 print( i ) } }"
+		ast = parseProgramm(prog)
+		runStmt(ast)
+
+		prog = "{ i := 3 * ( 2 + -1 ) == 3 + 0 * 4 print( i ) }"
+		ast = parseProgramm(prog)
+		runStmt(ast)
+
+		prog = "{ i := true if true {y:=1}else{y:=0}print(y) }"
+		ast = parseProgramm(prog)
+		runStmt(ast)
+
+		prog = "{ i := (1+2)*(3+4)+15 print(i) }"
+		ast = parseProgramm(prog)
+		runStmt(ast)
+	*/
 }
