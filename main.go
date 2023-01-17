@@ -37,7 +37,7 @@ type Exp interface {
 
 type Stmt interface {
 	pretty() string
-	eval(s ValState)
+	eval(s ValState) string
 	check(t TyState) bool
 }
 
@@ -186,20 +186,16 @@ func variable(s string) Exp {
 func main() {
 	//test()
 
-	prog := "i := 0 ; while i < 10 { i = i + 1; print( i ) } ; print(i)"
-	tokens := tokenize(prog)
-	rpn := convertToReversePolishNotation(tokens)
-	myPrint(rpn)
-	ast := rpnToAst(rpn)
-	runStmt(ast)
+	// prog := "i := 0 ; while i < 10 { i = i + 1; print( i ) } ; print(i)"
+	// tokens := tokenize(prog)
+	// rpn := convertToReversePolishNotation(tokens)
+	// myPrint(rpn)
+	// ast := rpnToAst(rpn)
+	// runStmt(ast)
 
-	prog = "{ i := false; x := 3; y := 1; if i { i = true } else { i := 3; x := 0; y = 2; print( i ); print( x ) }; print( i ); print( x ); print( y ) } "
+	prog := "i:=0;while(i<10){i=i+1;print(i)}"
 	//prog = "i := false; if i { print(1)} else{print(2)}"
-	ast = parseProgramm(prog)
-	runStmt(ast)
-	prog = ast.pretty()
-	ast = parseProgramm(prog)
-	runStmt(ast)
+	print(parseAndRun(prog))
 
 	/*
 

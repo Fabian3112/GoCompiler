@@ -47,33 +47,38 @@ type ValState map[string]*Val
 /////////////////////////
 // Stmt instances
 
-func (stmt Seq) eval(s ValState) {
-	stmt[0].eval(s)
-	stmt[1].eval(s)
+func (stmt Seq) eval(s ValState) string {
+	var result string
+	result += stmt[0].eval(s)
+	result += stmt[1].eval(s)
+	return result
 }
 
-func (ite IfThenElse) eval(s ValState) {
+func (ite IfThenElse) eval(s ValState) string {
+	var result string
 	v := ite.cond.eval(s)
 	if v.flag == ValueBool {
 		switch {
 		case v.valB:
-			ite.thenStmt.eval(s)
+			result += ite.thenStmt.eval(s)
 		case !v.valB:
-			ite.elseStmt.eval(s)
+			result += ite.elseStmt.eval(s)
 		}
 
 	} else {
 		fmt.Printf("if-then-else eval fail")
+		result += "if-then-else eval fail"
 	}
-
+	return result
 }
 
 // Maps are represented via points.
 // Hence, maps are passed by "reference" and the update is visible for the caller as well.
-func (decl Decl) eval(s ValState) {
+func (decl Decl) eval(s ValState) string {
 	v := decl.rhs.eval(s)
 	x := (string)(decl.lhs)
 	s[x] = &v
+	return ""
 }
 
 /////////////////////////
@@ -131,7 +136,7 @@ func (e Or) eval(s ValState) Val {
 
 /*----------------- Own Code -----------------------*/
 
-func (a Assign) eval(s ValState) {
+func (a Assign) eval(s ValState) string {
 	v := a.rhs.eval(s)
 	x := (string)(a.lhs)
 	oldValue, ok := s[x]
@@ -144,32 +149,38 @@ func (a Assign) eval(s ValState) {
 
 	oldValue.valB = v.valB
 	oldValue.valI = v.valI
+	return ""
 }
 
-func (w WhileStmt) eval(s ValState) {
+func (w WhileStmt) eval(s ValState) string {
+	var result string
 	for w.cond.eval(s).valB {
-		w.block.eval(s)
+		result += w.block.eval(s)
 	}
+	return result
 }
 
-func (b Block) eval(s ValState) {
+func (b Block) eval(s ValState) string {
 	s_new := make(map[string]*Val)
 
 	for key, element := range s {
 		s_new[key] = element
 	}
 
-	b.stmt.eval(s_new)
+	return b.stmt.eval(s_new)
 }
 
-func (p PrintStmt) eval(s ValState) {
+func (p PrintStmt) eval(s ValState) string {
 	val := p.exp.eval(s)
 	if val.flag == ValueBool {
 		fmt.Printf("%t \n", val.valB)
+		return fmt.Sprintf("%t", val.valB)
 	} else if val.flag == ValueInt {
 		fmt.Printf("%d \n", val.valI)
+		return fmt.Sprintf("%d", val.valI)
 	} else {
 		fmt.Printf("Error Evaluating Print Statement Illtyped Value")
+		return "Error Evaluating Print Statement Illtyped Value"
 	}
 
 }

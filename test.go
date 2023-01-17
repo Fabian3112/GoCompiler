@@ -23,24 +23,6 @@ func test() {
 	localVariablesDoNotOverrideGlobalVariables()
 }
 
-func run(e Exp) {
-	s := make(map[string]*Val)
-	t := make(map[string]*Type)
-	fmt.Printf("\n ******* ")
-	fmt.Printf("\n %s", e.pretty())
-	fmt.Printf("\n %s", showVal(e.eval(s)))
-	fmt.Printf("\n %s", showType(e.infer(t)))
-}
-
-func runStmt(stmt Stmt) {
-	s := make(map[string]*Val)
-	t := make(map[string]*Type)
-	fmt.Printf("\n ******* ")
-	fmt.Printf("\n%s \n \n ==> \n", stmt.pretty())
-	stmt.eval(s)
-	fmt.Printf("\n %t", stmt.check(t))
-}
-
 func ex1() {
 	ast := plus(mult(number(1), number(2)), number(0))
 
