@@ -5,6 +5,17 @@ type Token struct {
 	value     string
 }
 
+/*
+https://bitloeffel.de/DOC/golang/go_spec_de.html#Operators
+Priorität     Operator
+	6			 !  (Unär Höchste Prio)
+    5             *  /  %  <<  >>  &  &^
+    4             +  -  |  ^
+    3             ==  !=  <  <=  >  >=
+    2             &&
+    1             ||
+*/
+
 func (token *Token) ranking() int {
 	switch token.tokenType {
 	case SemikononToken:

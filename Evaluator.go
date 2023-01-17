@@ -142,9 +142,11 @@ func (a Assign) eval(s ValState) string {
 	oldValue, ok := s[x]
 	if !ok {
 		fmt.Printf("Variable unknown. Var: " + x)
+		return fmt.Sprintf("Variable unknown. Var: " + x)
 	}
 	if v.flag != oldValue.flag {
 		fmt.Printf("Variable assignement Failed. Var: " + x)
+		return fmt.Sprintf("Variable assignement Failed. Var: " + x)
 	}
 
 	oldValue.valB = v.valB

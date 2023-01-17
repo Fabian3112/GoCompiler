@@ -49,6 +49,10 @@ func (decl Decl) check(t TyState) bool {
 
 func (a Assign) check(t TyState) bool {
 	x := (string)(a.lhs)
+	_, ok := t[x]
+	if !ok {
+		return false
+	}
 	return *t[x] == a.rhs.infer(t)
 }
 
