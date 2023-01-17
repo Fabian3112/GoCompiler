@@ -57,6 +57,9 @@ func Test_parseAndRun(t *testing.T) {
 		{"while override Variable", args{"i:=0;while(i<5){i=i+1;print(i);i:=i+5;print(i)}"}, "16273849510"},
 		{"If override Variable", args{"i:=true;if(i){i:=5;print(i)}else{print(123)};print(i)"}, "5true"},
 		{"Else override Variable", args{"i:=true;if(!i){print(123)}else{i:=5;print(i)};print(i)"}, "5true"},
+
+		{"Komplex Expression 1", args{"print(2+5 * (15+-12))"}, "17"},
+		{"Komplex Expression 2", args{"print((2+5)==0*9+3*((4+5)*1*0+2)+1)"}, "true"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
